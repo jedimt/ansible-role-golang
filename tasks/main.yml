@@ -1,0 +1,35 @@
+---
+
+- name: Check for pre-existing GoLang archive
+  stat: 
+    path: /usr/local/go/README.md
+  register: go_folder
+
+- name: Create directory for GoLang install
+  ansible.builtin.file:
+    path: /usr/local/go
+    state: directory
+  when: not go_folder.stat.exists
+  
+- name: Download and expand GoLang archive
+  unarchive:
+    src: https://golang.org/dl/go{{go_version}}.linux-amd64.tar.gz
+    dest: /usr/local/go
+    remote_src: yes
+    extra_opts:
+      - --strip-components=1
+  when: not go_folder.stat.exists
+
+- name: Add GoLang paths to bashrc
+  blockinfile:
+    path: ~/.bashrc
+    block: |
+      export GOROOT=/usr/local/go
+      export GOPATH=$HOME/go
+      export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+  tags: bashrc
+
+- name: Reload bashrc 
+  shell: . ~/.bashrc
+  tags: bashrc
+
