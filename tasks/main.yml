@@ -1,7 +1,7 @@
 ---
 
 - name: Check for pre-existing GoLang archive
-  stat: 
+  ansible.builtin.stat:
     path: /usr/local/go/README.md
   register: go_folder
 
@@ -9,19 +9,20 @@
   ansible.builtin.file:
     path: /usr/local/go
     state: directory
+    mode: '0644'
   when: not go_folder.stat.exists
-  
+
 - name: Download and expand GoLang archive
-  unarchive:
-    src: https://golang.org/dl/go{{go_version}}.linux-amd64.tar.gz
+  ansible.builtin.unarchive:
+    src: https://golang.org/dl/go{{ go_version }}.linux-amd64.tar.gz
     dest: /usr/local/go
-    remote_src: yes
+    remote_src: true
     extra_opts:
       - --strip-components=1
   when: not go_folder.stat.exists
 
 - name: Add GoLang paths to bashrc
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: ~/.bashrc
     block: |
       export GOROOT=/usr/local/go
@@ -29,7 +30,7 @@
       export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
   tags: bashrc
 
-- name: Reload bashrc 
-  shell: . ~/.bashrc
+- name: Reload bashrc
+  ansible.builtin.shell: . ~/.bashrc
+  changed_when: false
   tags: bashrc
-
