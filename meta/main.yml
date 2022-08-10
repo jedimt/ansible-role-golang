@@ -1,5 +1,6 @@
 galaxy_info:
-  author: Aaron Patten
+  author: jedimt
+  role_name: golang_install
   description: Install GoLang
 
   license: MIT
@@ -13,8 +14,7 @@ galaxy_info:
         - xenial
         - jammy
 
-  galaxy_tags: 
+  galaxy_tags:
     - golang
 
 dependencies: []
-
