@@ -31,6 +31,7 @@
   tags: bashrc
 
 - name: Reload bashrc
-  ansible.builtin.shell: . ~/.bashrc
+  # Tell ansible-lint to skip the shell check since command will not work with source
+  ansible.builtin.shell: . ~/.bashrc # noqa 305
   changed_when: false
   tags: bashrc
