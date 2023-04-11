@@ -1,6 +1,6 @@
 galaxy_info:
   author: jedimt
-  role_name: golang_install
+  role_name: golang
   description: Install GoLang
 
   license: MIT
