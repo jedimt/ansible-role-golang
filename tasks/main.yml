@@ -21,9 +21,15 @@
       - --strip-components=1
   when: not go_folder.stat.exists
 
+- name: Create ~/.bashrc file if it doesn't exist
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    state: touch
+    mode: '0644'
+
 - name: Add GoLang paths to bashrc
   ansible.builtin.blockinfile:
-    path: ~/.bashrc
+    path: "{{ ansible_env.HOME }}/.bashrc"
     block: |
       export GOROOT=/usr/local/go
       export GOPATH=$HOME/go
@@ -32,6 +38,6 @@
 
 - name: Reload bashrc
   # Tell ansible-lint to skip the shell check since command will not work with source
-  ansible.builtin.shell: . ~/.bashrc # noqa 305
+  ansible.builtin.shell: . "{{ ansible_env.HOME }}/.bashrc" # noqa command-instead-of-shell
   changed_when: false
   tags: bashrc
